@@ -1,6 +1,6 @@
 from torch import nn
-from torchvision.models.utils import load_state_dict_from_url
-
+# from torchvision.models.utils import load_state_dict_from_url
+from torch.hub import load_state_dict_from_url #由于pytorch版本问题更改上一行代码
 
 __all__ = ['MobileNetV2', 'mobilenetv2']
 

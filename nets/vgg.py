@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
-from torchvision.models.utils import load_state_dict_from_url
+# from torchvision.models.utils import load_state_dict_from_url
+from torch.hub import load_state_dict_from_url #由于pytorch版本问题更改上一行代码
 
 model_urls = {
     'vgg11': 'https://download.pytorch.org/models/vgg11-bbd30ac9.pth',

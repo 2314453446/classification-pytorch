@@ -15,7 +15,7 @@ test_annotation_path    = 'cls_test.txt'
 #------------------------------------------------------#
 #   metrics_out_path        指标保存的文件夹
 #------------------------------------------------------#
-metrics_out_path        = "metrics_out"
+metrics_out_path        = "metrics_out_crop_SRweed"
 
 class Eval_Classification(Classification):
     def detect_image(self, image):        

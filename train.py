@@ -81,7 +81,7 @@ if __name__ == "__main__":
     #   如果想要让模型从主干的预训练权值开始训练，则设置model_path = ''，pretrain = True，此时仅加载主干。
     #   如果想要让模型从0开始训练，则设置model_path = ''，pretrain = Fasle，此时从0开始训练。
     #----------------------------------------------------------------------------------------------------------------------------#
-    model_path      = ""
+    model_path      = "mobilenet_v2-b0353104.pth"
         
     #----------------------------------------------------------------------------------------------------------------------------#
     #   训练分为两个阶段，分别是冻结阶段和解冻阶段。设置冻结阶段是为了满足机器性能不足的同学的训练需求。
@@ -117,6 +117,7 @@ if __name__ == "__main__":
     #                       （断点续练时使用）
     #   Freeze_Epoch        模型冻结训练的Freeze_Epoch
     #                       (当Freeze_Train=False时失效)
+    #   Freeze_batch_size   模型冻结训练的batch_size
     #   Freeze_batch_size   模型冻结训练的batch_size
     #                       (当Freeze_Train=False时失效)
     #------------------------------------------------------------------#
@@ -167,7 +168,7 @@ if __name__ == "__main__":
     #------------------------------------------------------------------#
     #   save_period     多少个epoch保存一次权值
     #------------------------------------------------------------------#
-    save_period         = 10
+    save_period         = 20
     #------------------------------------------------------------------#
     #   save_dir        权值与日志文件保存的文件夹
     #------------------------------------------------------------------#
@@ -297,9 +298,9 @@ if __name__ == "__main__":
     #---------------------------#
     #   读取数据集对应的txt
     #---------------------------#
-    with open(train_annotation_path, encoding='utf-8') as f:
+    with open(train_annotation_path, encoding='latin1') as f:
         train_lines = f.readlines()
-    with open(test_annotation_path, encoding='utf-8') as f:
+    with open(test_annotation_path, encoding='latin1') as f:
         val_lines   = f.readlines()
     num_train   = len(train_lines)
     num_val     = len(val_lines)

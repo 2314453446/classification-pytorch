@@ -7,7 +7,7 @@ Medical_Datasets/
 lfw/
 logs/
 model_data/
-metrics_out/
+metrics_out_crop_weed/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -138,3 +138,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+dataset*/
+metrics*/
