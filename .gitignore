@@ -142,3 +142,4 @@ dataset*/
 metrics*/
 maskiou/
 *.png
+*.pth
