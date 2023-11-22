@@ -184,6 +184,26 @@ def get_mask(img_path):
     # imshow(eroded_img)
     return eroded_img
 
+def apply_mask(image, mask):
+    # 将掩膜转换为三通道，以便与彩色图像相乘
+    mask_3d = np.stack((mask, mask, mask), axis=-1)
+
+    # 将掩膜应用于原始图像
+    masked_image = cv2.bitwise_and(image, mask_3d)
+    return masked_image
+
+
+def draw_bounding_boxes(image, mask):
+    # 找到掩膜的轮廓
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # 绘制每个轮廓的边界框
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 255), 2)  # 使用绿色边界框
+
+    return image
+
 
 if __name__ == "__main__":
     image_path = r"D:\masterPROJECT\laser_weeding\weed_dataset\PhenoBench\val\images\05-15_00075_P0030859.png"  # Replace with the actual path to your image
@@ -209,7 +229,7 @@ if __name__ == "__main__":
     # Step 5: Create an output image with black background and weed potential areas in white
     output_image = np.zeros_like(image)
     output_image[mask != 0] = (255, 255, 255)
-
+    output_image = output_image[:,:,0]
     morph = morphological_trans()
     hsvimg = weed_detection(image_path)
     hsvimg = hsvimg[:, :, 0]
@@ -217,25 +237,59 @@ if __name__ == "__main__":
     dilated_img = morph.dilate(small_mask_removed, iterations=8, kernel_size=(3, 3), special_kernel="kernel")
     eroded_img = morph.erode(dilated_img, kernel_size=(3, 3), special_kernel="cross_kernel", iterations=8)
     # imshow(eroded_img)
-    fig, axs = plt.subplots(1, 5, figsize=(25, 5))
-    axs[0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    axs[0].axis('off')
-    # axs[0].set_title("Original Image")
+    print(output_image.shape,small_mask_removed.shape,eroded_img.shape,dilated_img.shape)
 
-    axs[1].imshow(output_image, cmap='gray')
-    axs[1].axis('off')
-    # axs[1].set_title("source hsv_image")
 
-    axs[2].imshow(small_mask_removed, cmap='gray')
-    axs[2].axis('off')
-    # axs[2].set_title("Small Mask Removed")
+    # 创建包含原始图像和处理步骤图像的子图
+    fig, axs = plt.subplots(3, 5, figsize=(25, 15))  # 创建两行五列的子图
 
-    axs[3].imshow(dilated_img, cmap='gray')
-    axs[3].axis('off')
-    # axs[3].set_title("Dilated Image")
+    # 显示原始图像和处理步骤图像
+    axs[0, 0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    axs[0, 0].axis('off')
+    axs[0, 1].imshow(output_image, cmap='gray')
+    axs[0, 1].axis('off')
+    axs[0, 2].imshow(small_mask_removed, cmap='gray')
+    axs[0, 2].axis('off')
+    axs[0, 3].imshow(dilated_img, cmap='gray')
+    axs[0, 3].axis('off')
+    axs[0, 4].imshow(eroded_img, cmap='gray')
+    axs[0, 4].axis('off')
 
-    axs[4].imshow(eroded_img, cmap='gray')
-    axs[4].axis('off')
-    # axs[4].set_title("Eroded Image")
+    # 应用掩膜并创建第二行的子图
+    masked_output_image = apply_mask(image, output_image)
+    masked_small_removed = apply_mask(image, small_mask_removed)
+    masked_dilated = apply_mask(image, dilated_img)
+    masked_eroded = apply_mask(image, eroded_img)
 
+    # 显示第二行的子图
+    axs[1, 0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))  # 再次显示原始图像
+    axs[1, 0].axis('off')
+    axs[1, 1].imshow(cv2.cvtColor(masked_output_image, cv2.COLOR_BGR2RGB))
+    axs[1, 1].axis('off')
+    axs[1, 2].imshow(cv2.cvtColor(masked_small_removed, cv2.COLOR_BGR2RGB))
+    axs[1, 2].axis('off')
+    axs[1, 3].imshow(cv2.cvtColor(masked_dilated, cv2.COLOR_BGR2RGB))
+    axs[1, 3].axis('off')
+    axs[1, 4].imshow(cv2.cvtColor(masked_eroded, cv2.COLOR_BGR2RGB))
+    axs[1, 4].axis('off')
+
+    # 创建第三行子图并显示绘制了边界框的图像
+    boxed_output_image = draw_bounding_boxes(masked_output_image.copy(), output_image)
+    boxed_small_removed = draw_bounding_boxes(masked_small_removed.copy(), small_mask_removed)
+    boxed_dilated = draw_bounding_boxes(masked_dilated.copy(), dilated_img)
+    boxed_eroded = draw_bounding_boxes(masked_eroded.copy(), eroded_img)
+
+    # 显示第三行的子图
+    axs[2, 0].imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))  # 再次显示原始图像
+    axs[2, 0].axis('off')
+    axs[2, 1].imshow(cv2.cvtColor(boxed_output_image, cv2.COLOR_BGR2RGB))
+    axs[2, 1].axis('off')
+    axs[2, 2].imshow(cv2.cvtColor(boxed_small_removed, cv2.COLOR_BGR2RGB))
+    axs[2, 2].axis('off')
+    axs[2, 3].imshow(cv2.cvtColor(boxed_dilated, cv2.COLOR_BGR2RGB))
+    axs[2, 3].axis('off')
+    axs[2, 4].imshow(cv2.cvtColor(boxed_eroded, cv2.COLOR_BGR2RGB))
+    axs[2, 4].axis('off')
+
+    plt.savefig("./HSV_morph.png",dpi = 300)
     plt.show()

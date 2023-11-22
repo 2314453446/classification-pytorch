@@ -130,18 +130,18 @@ def load_images_and_calculate_overlap(folder_true, folder_pred, n_classes, outpu
 if __name__=="__main__":
 
     # Define the input and output directories
-    input_directory = r"D:\Learning_software\datasets\classfication-pytorch\val\images"  # replace with your input directory path
-    vis_output_directory = r"D:\Learning_software\datasets\classfication-pytorch\vis_output"  # replace with your output directory path
-    predict2label_dir =r"D:\Learning_software\datasets\classfication-pytorch\predict2label"
+    input_directory = r"D:\Learning_software\datasets\classfication-pytorch\val\images"  # 输入图片目录
+    vis_output_directory = r"D:\Learning_software\datasets\classfication-pytorch\fake_figure\fack_vis_output"  # 可视化输出目录
+    predict2label_dir =r"D:\Learning_software\datasets\classfication-pytorch\fake_figure\fack_predict2label" #预测结果转换成2类别png输出目录
 
     # 加载label文件夹下的所有文件，relabel后仅保存两个类别
-    source_folder = r'D:\Learning_software\datasets\classfication-pytorch\val\semantics'  # 源文件夹路径
-    destination_folder = r'D:\Learning_software\datasets\classfication-pytorch\label2relabel'  # 目标文件夹路径
+    source_folder = r'D:\Learning_software\datasets\classfication-pytorch\val\semantics'  # 源label文件夹路径
+    destination_folder = r'D:\Learning_software\datasets\classfication-pytorch\label2relabel'  # 目标文件夹路重新2类别划分输出目录
 
     # 计算mask iou路径
     folder_true = 'D:\Learning_software\datasets\classfication-pytorch\label2relabel'  # 真实标签图像文件夹路径
-    folder_pred = 'D:\Learning_software\datasets\classfication-pytorch\predict2label'  # 预测标签图像文件夹路径
-    output_overlap_file = 'D:\Learning_software\datasets\classfication-pytorch\overlap_resutl.txt'
+    folder_pred = r'D:\Learning_software\datasets\classfication-pytorch\fake_figure\fack_predict2label'  # 预测标签图像文件夹路径
+    output_overlap_file = r'D:\Learning_software\datasets\classfication-pytorch\fake_figure\overlap_resutl.txt'
     n_classes =3
 
     class_colors = {
@@ -174,6 +174,17 @@ if __name__=="__main__":
                 target = Image.fromarray(cv2.cvtColor(target, cv2.COLOR_BGR2RGB))
                 class_name = classification.detect_image2(target)
                 print(class_name)
+
+                # 画图，画出mask小于面积小于阈值的轮廓，如果轮廓面积小于30且类别为 crop,将它改为 weed类别
+                #
+                if class_name=="crop":
+                    contour_area = cv2.contourArea(contour)
+                    if contour_area<200:
+                        class_name = "weed"
+                if class_name=="weed":
+                    contour_area = cv2.contourArea(contour)
+                    if contour_area<100:
+                        class_name = "crop"
 
                 # 画出质心点
                 if class_name == "weed":

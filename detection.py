@@ -78,7 +78,7 @@ def calculate_class_overlap(y_true, y_pred, n_classes):
 
 classfication = Classification()
 
-image_path = "maskiou/image/05-15_00034_P0030852.png"
+image_path = "00115_1_1.jpg"
 image = cv2.imread(image_path)
 input_image = image.copy()
 mask_image = getmask.get_mask(image_path)
@@ -117,22 +117,23 @@ for contour in contours:
 alpha = 0.5
 # 将透明层叠加到原始图像上
 cv2.addWeighted(overlay, alpha, input_image, 1 - alpha, 0, input_image)
+cv2.imwrite("output_img.jpg",input_image)
 
 # 写入overlay 文件，并转换数据格式与标签对齐weed值为2，crop值为1
-predict_path = "maskiou/predict/test_predict.png"
+predict_path = "maskiou/predict/00115_1_1.jpg"
 overlay_16bit=get_predict_result(overlay)
 cv2.imwrite(predict_path, overlay_16bit)
 
 #重写label文件，仅保存两个类别---------------------------------
-label_image = "maskiou/label/05-15_00034_P0030852.png"
+label_image = "maskiou/label/00115_1_1.jpg"
 relabel_img = label2relabel(label_image)
-relabel_path = 'maskiou/relabel/relabel_test.png'
+relabel_path = 'maskiou/relabel/00115_1_1.jpg'
 Image.fromarray(relabel_img).save(relabel_path)
 
 # 计算各类别匹配的重合率---------------------------------
 # 读取十六位深度图像作为示例
-y_true_path = 'maskiou/relabel/relabel_test.png'
-y_pred_path = 'maskiou/predict/test_predict.png'
+y_true_path = 'maskiou/relabel/00115_1_1.jpg'
+y_pred_path = 'maskiou/predict/00115_1_1.jpg'
 y_true_image = Image.open(y_true_path)
 y_pred_image = Image.open(y_pred_path)
 y_true = np.array(y_true_image)

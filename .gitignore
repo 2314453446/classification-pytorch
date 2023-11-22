@@ -143,3 +143,5 @@ metrics*/
 maskiou/
 *.png
 *.pth
+logs*/
+*.pb

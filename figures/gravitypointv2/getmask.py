@@ -180,7 +180,7 @@ def get_mask(img_path):
     hsvimg = hsvimg[:, :, 0]
     small_mask_removed = remove_small_areas(hsvimg, min_area=10)
     dilated_img = morph.dilate(small_mask_removed, iterations=8, kernel_size=(3, 3), special_kernel="kernel")
-    eroded_img = morph.erode(dilated_img, kernel_size=(3, 3), special_kernel="kernel", iterations=7)
+    eroded_img = morph.erode(dilated_img, kernel_size=(3, 3), special_kernel="cross_kernel", iterations=7)
     # imshow(eroded_img)
     return eroded_img
 
