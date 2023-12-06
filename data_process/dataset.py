@@ -48,9 +48,9 @@ def distribute_files_by_size(original_folder, train_folder, validation_folder, t
     move_files_to_folder(files[train_count + validation_count:], test_folder)
 
 original_folder = r"D:\masterPROJECT\laser_weeding\weed_dataset\PhenoBench_classficationv2\test_folder\row\weed"
-train_folder = r"D:\masterPROJECT\laser_weeding\weed_dataset\PhenoBench_classficationv2\with_small_objects\train\weed"
-validation_folder = r"D:\masterPROJECT\laser_weeding\weed_dataset\PhenoBench_classficationv2\with_small_objects\valid\weed"
-test_folder = r"D:\masterPROJECT\laser_weeding\weed_dataset\PhenoBench_classficationv2\with_small_objects\test\weed"
+train_folder = r"D:\masterPROJECT\laser_weeding\weed_dataset\PhenoBench_classficationv2\PhenoBench_classfication_PSR_with_smallobj_thr200\train\weed"
+validation_folder = r"D:\masterPROJECT\laser_weeding\weed_dataset\PhenoBench_classficationv2\PhenoBench_classfication_PSR_with_smallobj_thr200\valid\weed"
+test_folder = r"D:\masterPROJECT\laser_weeding\weed_dataset\PhenoBench_classficationv2\PhenoBench_classfication_PSR_with_smallobj_thr200\test\weed"
 
 train_percentage = 0.7
 validation_percentage = 0.2
